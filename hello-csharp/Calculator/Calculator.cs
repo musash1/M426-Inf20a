@@ -2,9 +2,14 @@
 {
     public class Calculator
     {
-        public static int Add(int a, int b)
+        public static int Add(int summandA, int summandB)
         {
-            return a + b;
+            return summandA + summandB;
+        }
+
+        public int Subtract(int minuend, int subtrahend)
+        {
+            return minuend - subtrahend;
         }
     }
 }
