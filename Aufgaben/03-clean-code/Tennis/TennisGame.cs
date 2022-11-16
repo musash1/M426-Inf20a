@@ -1,166 +1,163 @@
+using System.Net.Sockets;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Tennis
 {
     public class TennisGameManager
     {
-        private int p1point;
-        private int p2point;
+        private int p1Point;
+        private int p2Point;
+        private string p1Result;
+        private string p2Result;
+        private string playerName1;
+        private string playerName2;
 
-        private string Five_teen = "Fifteen";
-
-        private string p1res = "";
-        private string p2res = "";
-        private string player1Name;
-        private string player2Name;
-
-        public TennisGameManager(string player1Name, 
-            string player2Name)
+        public TennisGameManager(string playerName1, string playerName2)
         {
-            this.player1Name = player1Name;
-            p1point = 0;
-            this.player2Name = player2Name;
+            this.playerName1 = playerName1;
+            this.playerName2 = playerName2;
         }
 
         public string Score_Getter()
         {
-            var s = "";
+            var score = "";
+            
             // when both have same points and game smaller than three
-            if (p1point == p2point && p1point < 3){
-                if (p1point == 0)
-                    s = "Love";
-                if (p1point == 1)
+            if (p1Point == p2Point && p1Point < 3){
+                switch (p1Point)
                 {
-                    s = "Fifteen";}
-                if (p1point == 2)
-                    s = "Thirty";
+                    case 0:
+                        score = "Love";
+                        break;
+                    case 1:
+                        score = "Fifteen";
+                        break;
+                    case 2:
+                        score = "Thirty";
+                        break;
+                }
+                
                 // do we need this?
                 //if (p1point == 3)
-                //    s = "Fourty";
-                s += "-All";
+                //    s = "Forty";
+                score += "-All";
             }
-            if (p1point == p2point && p1point > 2)
-                s = "Deuce";
 
-            if (p1point > 0 && p2point == 0)
+            if (p1Point == p2Point && p1Point > 2)
             {
-                if (p1point == 1)
-                    p1res = Five_teen;
-                if (p1point == 2)
-                    p1res = "Thirty";
-                if (p1point == 3)
-                    p1res = "Forty";
-
-                p2res = "Love";
-                s = p1res + "-" + p2res;
+                score = "Deuce";
             }
-            if (p2point > 0 && p1point == 0)
+
+            if (p1Point > 0 && p2Point == 0)
             {
-                var temp = p2point;
-                if (temp == 1)
-                    p2res = "Fifteen";
-                else
+                switch (p1Point)
                 {
-                    // todo: 
+                    case 1:
+                        p1Result = "Fifteen";
+                        break;
+                    case 2:
+                        p1Result = "Thirty";
+                        break;
+                    case 3:
+                        p1Result = "Forty";
+                        break;
                 }
-                if (temp == 2)
-                    p2res = "Thirty";
-                if (temp == 3)
-                    p2res = "Forty";
 
-                p1res = "Love";
-                s = p1res + "-" + p2res;
+                p2Result = "Love";
+                score = p1Result + "-" + p2Result;
             }
-            if (p1point > p2point && p1point < 4){
-                if (p1point == 2)
-                    p1res = "Thirty";
-                if (p1point == 3)
-                    p1res = "Forty";
-                if (p2point == 1)
-                    p2res = "Fifteen";
-                if (p2point == 2)
-                    p2res = "Thirty";
-                s = p1res + "-" + p2res;}
-
-
-
-            if (p2point > p1point && p2point < 4)
+            
+            if (p2Point > 0 && p1Point == 0)
             {
-                if (p2point ==   2)
-                    p2res = "Thirty";
-                if (p2point == 3)
-                    p2res = "Forty";
-                if (p1point == 1 )
-                    p1res = "Fifteen";
-                if (p1point == 2)
-                    p1res = "Thirty";
-                s = p1res + "-" + p2res;
+                switch (p2Point)
+                {
+                    case 1:
+                        p2Result = "Fifteen";
+                        break;
+                    case 2:
+                        p2Result = "Thirty";
+                        break;
+                    case 3:
+                        p2Result = "Forty";
+                        break;
+                }
+
+                p1Result = "Love";
+                score = p1Result + "-" + p2Result;
+            }
+            
+            if (p1Point > p2Point && p1Point < 4)
+            {
+                switch (p1Point)
+                {
+                    case 1:
+                        p1Result = "Fifteen";
+                        break;
+                    case 2:
+                        p1Result = "Thirty";
+                        break;
+                    case 3:
+                        p1Result = "Forty";
+                        break;
+                }
+                
+                score = p1Result + "-" + p2Result;
             }
 
-            if (p1point > p2point && p2point >= 3)
+
+
+            if (p2Point > p1Point && p2Point < 4)
             {
-                s = "Advantage player1";
+                switch (p2Point)
+                {
+                    case 1:
+                        p2Result = "Fifteen";
+                        break;
+                    case 2:
+                        p2Result = "Thirty";
+                        break;
+                    case 3:
+                        p2Result = "Forty";
+                        break;
+                }
+                
+                score = p1Result + "-" + p2Result;
             }
 
-            if (p2point > p1point && p1point >= 3)
+            if (p1Point > p2Point && p2Point >= 3)
             {
-                s = generate_Player_2_Name();
+                score = "Advantage Player 1";
             }
 
-            if (p1point >= 4 && p2point >= 0 && (p1point - p2point) >= 2)
+            if (p2Point > p1Point && p1Point >= 3)
             {
-                s = "Win for player1";
+                score = "Advantage Player 2";
             }
-            s = returnWinForPlayerOneIfWon(s, p1point, p2point);
-            return s;
+
+            score = returnWinForPlayer(score);
+            
+            return score;
         }
 
-        // This is the old implemenation: we may can it use later.
-        //private string GetResultOld(int tempScore, int m_score1, int m_score2)
-        //{
-        //    var score = "";
-        //    for (var i = 1; i < 3; i++)
-        //    {
-        //        if (i == 1) tempScore = m_score1;
-        //        else { score += "-"; tempScore = m_score2; }
-        //        switch (tempScore)
-        //        {
-        //            case 0:
-        //                score += "Love";
-        //                break;
-        //            case 1:
-        //                score += "Fifteen";
-        //                break;
-        //            case 2:
-        //                score += "Thirty";
-        //                break;
-        //            case 3:
-        //                score += "Forty";
-        //                break;
-        //        }
-        //    }
-        //    return "error";
-        //}
-
-        private static string generate_Player_2_Name()
+        private string returnWinForPlayer(string unfinishedScore)
         {
-            return "Advantage player2";
-        }
-
-        public string returnWinForPlayerOneIfWon(string s, int q, int y)
-        {
-            if (y >= 4 && q >= 0 && (y - q) >= 2)
+            if (p1Point >= 4 && p2Point >= 0 && (p1Point - p2Point) >= 2)
             {
-                return "Win for player2";
+                return "Win for Player 1";
             }
-            return s; 
+            else if (p2Point >= 4 && p1Point >= 0 && (p2Point - p1Point) >= 2)
+            {
+                return "Win for Player 2";
+            }
+
+            return unfinishedScore;
         }
 
         public void SetPlayer1Score(int number)
         {
             for (int i = 0; i < number; i++)
             {
-                P1Score();
+                p1Point++;
             }
         }
 
@@ -168,22 +165,20 @@ namespace Tennis
         {
             for (var i = 0; i < number; i++)
             {
-                SecondPlayerScore();
+                p2Point++;
             }
-        }
-
-        private void P1Score() => p1point++;
-        private void SecondPlayerScore()
-        {
-            p2point++;
         }
 
         public void WonPoint(string tennisPlayer)
         {
-            if (tennisPlayer == "player1"){
-                P1Score();}
+            if (tennisPlayer == "player1")
+            {
+                p1Point++;
+            }
             else
-                SecondPlayerScore();
+            {
+                p2Point++;
+            }
         }
 
     }
