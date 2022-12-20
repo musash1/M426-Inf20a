@@ -15,11 +15,11 @@ public class FibonacciTest
     public void TestBigFibonacciNumber()
     {
         // Arrange
-        int n = 45;
-        int expected = 1134903170;
+        int n = 45; 
+        long expected = 1134903170;
 
         // Act
-        int actual = Fibonacci.Fib(n);
+        long actual = Fibonacci.Fib(n);
 
         // Assert
         Assert.Equal(expected, actual);

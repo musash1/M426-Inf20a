@@ -8,4 +8,8 @@ public abstract class Animal
     {
         this.Name = name;
     }
+
+    public virtual string MakeNoise() {
+        return "";
+    }
 }

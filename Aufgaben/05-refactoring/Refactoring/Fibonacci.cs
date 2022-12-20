@@ -2,7 +2,7 @@ namespace Refactoring;
 
 public class Fibonacci
 {
-    public static int Fib(int n)
+    public static long Fib(int n)
     {
         if (n < 0)
         {
@@ -12,6 +12,18 @@ public class Fibonacci
         {
             return n;
         }
-        return Fib(n - 2) + Fib(n - 1);
+
+        long num1 = 1; 
+        long num2 = 1; 
+        long result = 0;
+
+        for (int i = 2; i < n; i++)
+        {
+            result = num1 + num2;
+            num1 = num2;
+            num2 = result;
+        }
+
+        return result;
     }
 }
